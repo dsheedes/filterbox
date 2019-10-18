@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Filterbox Example</title>
+        <link rel="stylesheet" href="css/stylesheet.css">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <div id="filterbox">
+            <div id="filterbox-controls">
+                <input type="text" id="filterbox-controls-search" name="search" placeholder="Search for a specific item" />
+                <input type="button" id="filterbox-controls-submit" name="submit" value="Search" />
+                <hr/>
+                <p><b>Search by category:</b></p>
+                <div id="filterbox-controls-categories">
+                    <p>category1</p>
+                    <p>category2</p>
+                </div>
+            </div>
+            <div id="filterbox-items">
+                <p>Search results:</p>
+                <div class="filterbox-item" data-filterbox-parent="maincategory" data-filterbox-category="category1">This item belongs to category1</div>
+                <div class="filterbox-item" data-filterbox-parent="basecategory" data-filterbox-category="maincategory">This item belongs to category1</div>
+                <div class="filterbox-item" data-filterbox-category="category2">This item belongs to category2</div>
+                <div class="filterbox-item" data-filterbox-parent="category2" data-filterbox-category="Spray cans">This item belongs to category2</div>
+
+            </div>
+        </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="js/filterbox.js"></script>
+
+    <script>
+        $("#filterbox").filterbox();
+    </script>
+    </body>
+</html>

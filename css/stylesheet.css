@@ -1,0 +1,26 @@
+html, body{
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+}
+
+#filterbox{
+    padding:10px;
+    display:flex;
+    margin-top:10px;
+}
+#filterbox-controls{
+    width:40%;
+    border:1px solid #ccc;
+    padding:10px;
+}
+#filterbox-items{
+    width:60%;
+    padding:10px;
+    border:1px solid #ccc;
+    
+}
+.filterbox-item{
+    padding:5px;
+}
