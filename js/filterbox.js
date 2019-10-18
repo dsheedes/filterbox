@@ -34,92 +34,76 @@
     }
 
 //Create a new array of categories with their children and subchildren.
-    function categorize(items){ 
-        var categories = [];
-        var relations = [];
-        var errors = [];
+    function categorize(items){
 
-        for(i = 0; i <= items.length - 1; i++){
-            var category = items[i].data("filterbox-category");
-            //console.log("Category "+category);
+        /*
 
-            var element = {
-                "category":{
-                    "name":category,
-                    "id":i,
-                    "value":items[i].html();
-                    "children":{}
-                }
-            }
-            if(items[i].data("filterbox-parent")){ //If parent is set
-                var parent = items[i].data("filterbox-parent");
-                //console.log("Category "+category+" Parent "+parent);
-                var parentIsSet = true;
-                var hierarchy = [];
+            Create a system that finds parents and assigns children to them.
 
+            1. Take the n-th item
+            2. Check if it has a parent
+                NO - add the first item to the main object
+                YES - proceed
+            3. Check if the parent already exists in the main object
+                NO - Save the parent and the child, repeat until no more parents, add to main object
+                YES - Add the child to the parent
+            4. Repeat 
+
+        */
+
+       var categories = [];
+       for(i = 0; i <= items.length - 1; i++){
+           var category = items[i].data("filterbox-category");
+
+           var child = {
+               "category":{
+                   name:category,
+                   id:i,
+                   value:items[i].html(),
+                   children:{}
+               }
+           }
+           if(items[i].data("filterbox-parent")){ //If parent exists
+                var childParent = items[i].data("filterbox-parent");
                 
-                newi = i;
-                hierarchy.push(category);
-                var searchParent = parent;
+                if(jsonFind(parent, categories)){ //If parent found
+                    var parent = jsonFind(childParent, categories); 
+                    parent.child.push(child); //Add the child to the parent
 
-                
-                while(parentIsSet){ //if the next parent is set
+                    //Now, let's see whether this parent has parents and so on
+                    if(categoriesSearch(parent.name)){ //Find parent element in items list
+                        if(categoriesSearch.data("filterbox-parent")){ //Find whether this parent has parents
+                            var hasParent = true;
+                            while(hasParent){
+                                //Add all the parents to one element and push to main object.
+                            }
 
-                    for(p = 0; p <= items.length - 1; p++){//Loop through all items
-                        if(p != newi){ //If current item is not same as searching item
-                            if(items[p].data("filterbox-category") == searchParent){ //Check if their categories are equal
-                                if(items[p].data("filterbox-parent")){ //If there is a next parent
-                                    hierarchy.push(searchParent);
-                                    searchParent = items[p].data("filterbox-parent");
-                                    newi = p;
-                                    break;
-                                } else { //if there are no more parents we can exit the for and while loop
-                                    hierarchy.push(searchParent);
-                                    parentIsSet = false; 
-                                    break;
-                                    }
-                            } else if (p == items.length - 1){ //If their categories are not equal and it's the last item, add it to the hierarchy list and end loops
-                                hierarchy.push(searchParent);
-                                parentIsSet = false;
-                                break;
+                        } //If there are no parents do nothing
+                    }
+
+                } else { //If parent not found
+                    var parent = {
+                        "category":{
+                            name:childParent,
+                            id:i,
+                            value:"",
+                            children:{
+                                child
                             }
                         }
                     }
-                    
-                }
 
-                hierarchy = hierarchy.reverse();
-                categories.push(hierarchy);
-            } else { //If parent is not set / solo categories
-                categories.push([category]);
-            }
-        }
-
-        //Now that we've got all our relatons it's time to merge them.
-        var previousRelation;
-        var position;
-        for(i = 0; i <= categories.length - 1; i++){
-            if(i == 0){
-                if(categories[i].length == 1){
-                    relations[categories[i]] = {};
-                } else {
-                    for(p = 0; p <= categories[i].length - 1; p++){
-                        if(p == 0){
-                            relations[categories[i][p]] = {};
-                            position = relations[categories[i][p]];
-                        } else {
-                            position[categories[i][p]] = {};
-                            position = position[categories[i][p]];
+                    //Let's find the parent in our database and assign it a value
+                    for(i = 0; i <= items.length - 1; i++){
+                        if(items[i].data("filterbox-parent") == childParent){
+                            parent.category.value = items[i].html(); //Assign value to object
                         }
                     }
                 }
-            }
-        }
-        console.log(relations);
-
-        if( jsonFind("basecategory",relations) ){
-            console.log("Basecategory found");
-        } else console.log("Basecategory not found");
+           } else { //Parent does not exist, we can push to categories
+                categories.push(child);
+           }
+       }
     }
 //Main
     $.fn.filterbox = function(){
