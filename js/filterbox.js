@@ -75,7 +75,7 @@
                         if(categoriesSearch.data("filterbox-parent")){ //Find whether this parent has parents
                             var hasParent = true;
                             while(hasParent){
-                                //Add all the parents to one element and push to main object.
+                                //Add all the parents to one element and push to main object./
                             }
 
                         } //If there are no parents do nothing
