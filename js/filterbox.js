@@ -60,10 +60,67 @@
 
         return items;
     }
+
+function displayCodeGenerator(items, ran){
+    var code = "";
+    for(var i = 0; i <= items.length - 1; i++){
+    
+        if(!ran){ //If code ran before set parent
+            code += "<div class='filterbox-categories-parent'>"
+            var parent = items[i].category.name;
+
+            code += parent
+        } else { //Else set child
+            code += "<div class='filterbox-categories-child'>"
+            var parent = items[i].category.name;
+
+            code += parent
+        }
+
+        var child = items[i].category.children;
+        if(child.length - 1 > 0){
+
+            code += displayCodeGenerator(child, true); //If there are more children, repeat process
+        } else if (child.length - 1 == 0){ //If the last child is left
+            code += "<div class='filterbox-categories-child'>"+child[0].category.name+"</div>";
+        }
+        code += "</div>";
+    }
+
+    return code;
+
+}
+function display(items){
+
+        //Generate html based on categorized items
+        
+        if($("#filterbox").find($("#filterbox-controls-categories")).length > 0){
+            var filterbox = $("#filterbox").find($("#filterbox-controls-categories"));
+            $(filterbox).html(displayCodeGenerator(items));
+
+        } else console.error("#filterbox-controls-categories not found. Cannot print.")
+
+}
 //Main
+
+/* 
+Settings:
+    display:true/false, (default false)
+    returnCategories:true/false, (default true)
+    logErrors: true/false, (default true)
+    customID: true/false, (default false)
+    cache: true/false (default true)
+
+    -------------------------------------------
+
+    pregenerated: true/false (default true) - This option will allow you to use a previously generated json category file. This will save load/cpu times. Use with caution.
+*/
     $.fn.filterbox = function(settings){
+        
         var categories = categorize(itemize($(this)));
 
-        console.log(categories);
+        display(categories);
+
+        return $(this);
     }
 })( jQuery );
