@@ -1,26 +1,44 @@
 //data-filterbox-category
 //data-filterbox-parent
 (function( $ ){
-    function itemize(location){ 
-
+    function itemize(location, custom){ 
 //Insert items into an array of jQuery objects and return it.
         var items = location.find($(".filterbox-item")); //Find filterbox-items by class
         var itemList = [];
 
-        for(i = 0; i <= items.length - 1; i++){
-            if($(items[i]).data("filterbox-category")){ //Only if it contains the category shall we include it
-                var element = {
-                    "category":{
-                        name:$(items[i]).data("filterbox-category"),
-                        id:i,
-                        value:$(items[i]).html(),
-                        parent:$(items[i]).data("filterbox-parent"),
-                        children:[],
+        if(custom){
+            for(i = 0; i <= items.length - 1; i++){
+                if($(items[i]).data("filterbox-category")){ //Only if it contains the category shall we include it
+                    var element = {
+                        "category":{
+                            name:$(items[i]).data("filterbox-category"),
+                            id:$(items[i]).data("filterbox-id"),
+                            value:$(items[i]).html(),
+                            parent:$(items[i]).data("filterbox-parent"),
+                            children:[],
+                        }
                     }
+                    itemList.push(element); //Insert to array
                 }
-                itemList.push(element); //Insert to array
+            }
+        } else {
+            for(i = 0; i <= items.length - 1; i++){
+                if($(items[i]).data("filterbox-category")){ //Only if it contains the category shall we include it
+                    var element = {
+                        "category":{
+                            name:$(items[i]).data("filterbox-category"),
+                            id:i,
+                            value:$(items[i]).html(),
+                            parent:$(items[i]).data("filterbox-parent"),
+                            children:[],
+                        }
+                    }
+                    itemList.push(element); //Insert to array
+                }
             }
         }
+
+        
 
         return itemList;
     }
@@ -94,21 +112,17 @@ function display(items){
 
         //Generate html based on categorized items
         
-        if($("#filterbox").find($("#filterbox-controls-categories")).length > 0){
-            var filterbox = $("#filterbox").find($("#filterbox-controls-categories"));
+        if($("#filterbox").find($("#filterbox-categories")).length > 0){
+            var filterbox = $("#filterbox").find($("#filterbox-categories"));
             $(filterbox).html(displayCodeGenerator(items));
 
-        } else console.error("#filterbox-controls-categories not found. Cannot print.")
+        } else console.error("#filterbox-categories not found. Cannot display categories.");
 
 }
 //Main
 
 /* 
 Settings:
-    display:true/false, (default false)
-    returnCategories:true/false, (default true)
-    logErrors: true/false, (default true)
-    customID: true/false, (default false)
     cache: true/false (default true)
 
     -------------------------------------------
@@ -116,11 +130,38 @@ Settings:
     pregenerated: true/false (default true) - This option will allow you to use a previously generated json category file. This will save load/cpu times. Use with caution.
 */
     $.fn.filterbox = function(settings){
-        
-        var categories = categorize(itemize($(this)));
 
-        display(categories);
+        //Setting default values
+        if(settings){
 
-        return $(this);
+            if(settings.display == undefined){
+                settings.display = true;
+            } 
+
+            if(settings.returnCategories == undefined){
+                settings.returnCategories = true;
+            }
+
+            if(settings.customId == undefined){
+                settings.customId = false;
+            }
+
+        } else {
+            var settings = {
+                display:true,
+                returnCategories:true,
+                customId:false
+            }
+        }
+
+        var categories = categorize(itemize($(this)), true);
+
+        if(settings.display)
+            display(categories);
+
+
+        if (settings.returnCategories){
+            return categories;
+        } else return $(this);
     }
 })( jQuery );

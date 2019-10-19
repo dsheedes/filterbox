@@ -12,7 +12,7 @@
                 <input type="button" id="filterbox-controls-submit" name="submit" value="Search" />
                 <hr/>
                 <p><b>Search by category:</b></p>
-                <div id="filterbox-controls-categories">
+                <div id="filterbox-categories">
                     
                 </div>
             </div>
@@ -30,7 +30,11 @@
     <script src="js/filterbox.js"></script>
 
     <script>
-        $("#filterbox").filterbox();
+        $("#filterbox").filterbox({
+            display:true,
+            returnCategories:false,
+            customId:false,
+        });
     </script>
     </body>
 </html>
