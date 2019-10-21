@@ -1,5 +1,3 @@
-//data-filterbox-category
-//data-filterbox-parent
 (function( $ ){
     function itemize(location, custom){ 
 //Insert items into an array of jQuery objects and return it.
