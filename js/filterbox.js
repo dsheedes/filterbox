@@ -79,32 +79,48 @@
         return items;
     }
 
-function displayCodeGenerator(items, ran){
-    var code = "";
+function displayCodeGenerator(items, ran, code){
+    var code ="";
     for(var i = 0; i <= items.length - 1; i++){
-    
-        if(!ran){ //If code ran before set parent
-            code += "<div class='filterbox-categories-parent'>"
-            var parent = items[i].category.name;
+        
+        var child = items[i].category.children;
 
-            code += parent
+        if(!ran){ //If code didnt run before, set parent
+            code += "<li class='filterbox-categories-parent'>"
+            var parent = items[i].category.name;
+        
+            code += parent;
+            code += "<ul>";
         } else { //Else set child
-            code += "<div class='filterbox-categories-child'>"
             var parent = items[i].category.name;
 
-            code += parent
+            if(child != undefined && parent != undefined){
+                code += "<li class='filterbox-categories-child'>";
+                code += parent;
+                code += "<ul>";
+            } else if (child != undefined && parent == undefined){
+                code += "<li class='filterbox-categories-parent'>";
+                code += parent;
+                code += "<ul>";
+            } else if(child = undefined && parent != undefined){
+                code += "<li class='filterbox-categories-parent'>";
+                code += parent;
+                code += "</ul>";
+            }
         }
 
-        var child = items[i].category.children;
         if(child.length - 1 > 0){
-
             code += displayCodeGenerator(child, true); //If there are more children, repeat process
         } else if (child.length - 1 == 0){ //If the last child is left
-            code += "<div class='filterbox-categories-child'>"+child[0].category.name+"</div>";
+            code += "<li class='filterbox-categories-child'>"+child[0].category.name+"</li>";
+            code += "</ul>";
+        } else {
+            code += "</ul>";
         }
-        code += "</div>";
+        code += "</li>";
     }
-
+    code += "</ul>";
+    console.log(code);
     return code;
 
 }
@@ -114,7 +130,7 @@ function display(items){
         
         if($("#filterbox").find($("#filterbox-categories")).length > 0){
             var filterbox = $("#filterbox").find($("#filterbox-categories"));
-            $(filterbox).html(displayCodeGenerator(items));
+            $(filterbox).html("<ul>"+displayCodeGenerator(items)+"</ul>");
 
         } else console.error("#filterbox-categories not found. Cannot display categories.");
 

@@ -27,7 +27,7 @@ html, body{
 
 .filterbox-categories-child{
     font-style: italic;
-    padding-left:10px;
+    /* padding-left:10px; */
     font-weight: 400;
 }
 .filterbox-categories-parent{
