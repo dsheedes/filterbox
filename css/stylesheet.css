@@ -33,3 +33,6 @@ html, body{
 .filterbox-categories-parent{
     font-weight:bold
 }
+#generated-html{
+    width:100%;
+}

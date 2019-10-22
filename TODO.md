@@ -7,3 +7,7 @@
 4. Enable caching
 5. Enable using custom (user set) IDs
 6. Enable using custom filterbox values
+## Fixes
+1. Sometimes not inserting children properly
+	- Find cases
+	- Fix cases

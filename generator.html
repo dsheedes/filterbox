@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Filterbox category generator</title>
+        <link rel="stylesheet" href="css/stylesheet.css">
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+
+        <header style="width:100%">
+            <p><strong>Create an element:</strong></p>
+            <label for="ivn">Item value or name: </label>
+            <input type="text" placeholder="Item value/name" id="ivn" />
+            <label for="ic">Item category: </label>
+            <input type="text" placeholder="Item category" id="ic" />
+            <label for="ip">Item parent </label>
+            <input type="text" placeholder="Item parent" id="ip" />
+            <input type="submit" value="Create" id="create" />
+            <hr/>
+        </header>
+        <main style="width:100%">
+            <div id="filterbox">
+                <div id="filterbox-categories">
+
+                </div>
+                <div id="filterbox-items">
+
+                </div>
+            </div>
+            <hr/>
+            <p>HTML:</p>
+            <textarea id="generated-html" rows="10"></textarea>
+        </main>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="js/filterbox.js"></script>
+    <script>
+        $("#create").click(function(){
+            var name = $("#ivn").val();
+            var category = $("#ic").val();
+            var parent = $("#ip").val();
+
+            console.log(name,category,parent);
+            if(name.trim()){
+                if(category.trim()){
+                    $("#filterbox-items").append("<div class='filterbox-item' data-filterbox-category='"+category+"' data-filterbox-parent='"+parent+"'>"+name+"</div>");
+                    var value = $("#generated-html").val();
+                    $("#generated-html").val(value+"<div class='filterbox-item' data-filterbox-category='"+category+"' data-filterbox-parent='"+parent+"'>"+name+"</div>")
+                    $("#filterbox").filterbox({
+                        display:true,
+                        returnCategories:false,
+                        customId:false,
+                    });
+                } else alert("Input category");
+            } else alert("Input name/value.");
+        });
+    </script>
+    </body>
+</html>

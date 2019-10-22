@@ -118,7 +118,6 @@ function displayCodeGenerator(items, ran, code){
         code += "</li>";
     }
     code += "</ul>";
-    console.log(code);
     return code;
 
 }
@@ -143,10 +142,19 @@ Settings:
 
     pregenerated: true/false (default true) - This option will allow you to use a previously generated json category file. This will save load/cpu times. Use with caution.
 */
-    $.fn.filterbox = function(settings){
+    $.fn.filterbox = function(settings, file){
 
+        var categories = categorize(itemize($(this)), true);
+        
+        var download = "<a href='data:application/json;base64,"+btoa(JSON.stringify(categories))+"'>Your categories are ready to download.</a>";
         //Setting default values
         if(settings){
+            if(settings.export == undefined){
+                settings.export = false;
+            }else {
+                $("body").html("<code>"+JSON.stringify(categories)+"</code>");
+                return;
+            }
 
             if(settings.display == undefined){
                 settings.display = true;
@@ -168,7 +176,6 @@ Settings:
             }
         }
 
-        var categories = categorize(itemize($(this)), true);
 
         if(settings.display)
             display(categories);
