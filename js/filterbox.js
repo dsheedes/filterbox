@@ -77,49 +77,18 @@
         return items;
     }
 
-function displayCodeGenerator(items, ran, code){
-    var code ="";
-    for(var i = 0; i <= items.length - 1; i++){
-        
-        var child = items[i].category.children;
-
-        if(!ran){ //If code didnt run before, set parent
-            code += "<li class='filterbox-categories-parent'>"
-            var parent = items[i].category.name;
-        
-            code += parent;
-            code += "<ul>";
-        } else { //Else set child
-            var parent = items[i].category.name;
-
-            if(child != undefined && parent != undefined){
-                code += "<li class='filterbox-categories-child'>";
-                code += parent;
-                code += "<ul>";
-            } else if (child != undefined && parent == undefined){
-                code += "<li class='filterbox-categories-parent'>";
-                code += parent;
-                code += "<ul>";
-            } else if(child = undefined && parent != undefined){
-                code += "<li class='filterbox-categories-parent'>";
-                code += parent;
-                code += "</ul>";
-            }
+function displayCodeGenerator(items, ran){
+    var code = "";
+    for(var i = 0; i <= items.length - 1; i++){ //For each item
+        if(items[i].category.children.length > 0){ //There are more children
+            code += "<li>"+items[i].category.name+"<ul>";
+            code += displayCodeGenerator(items[i].category.children)+"</ul></li>"; //Recursive call so it can loop through all children
+        } else { //There are no more children
+            code += "<li>"+items[i].category.name+"</li>";
         }
-
-        if(child.length - 1 > 0){
-            code += displayCodeGenerator(child, true); //If there are more children, repeat process
-        } else if (child.length - 1 == 0){ //If the last child is left
-            code += "<li class='filterbox-categories-child'>"+child[0].category.name+"</li>";
-            code += "</ul>";
-        } else {
-            code += "</ul>";
-        }
-        code += "</li>";
     }
-    code += "</ul>";
-    return code;
 
+    return code;
 }
 function display(items){
 
@@ -145,6 +114,7 @@ Settings:
     $.fn.filterbox = function(settings, file){
 
         var categories = categorize(itemize($(this)), true);
+        //console.log(categories);
         
         var download = "<a href='data:application/json;base64,"+btoa(JSON.stringify(categories))+"'>Your categories are ready to download.</a>";
         //Setting default values
@@ -153,7 +123,7 @@ Settings:
                 settings.export = false;
             }else {
                 $("body").html("<code>"+JSON.stringify(categories)+"</code>");
-                return;
+                return this;
             }
 
             if(settings.display == undefined){
@@ -179,7 +149,6 @@ Settings:
 
         if(settings.display)
             display(categories);
-
 
         if (settings.returnCategories){
             return categories;
