@@ -103,23 +103,13 @@ function display(items){
 }
 //Main
 
-/* 
-Settings:
-    cache: true/false (default true)
-
-    -------------------------------------------
-
-    pregenerated: true/false (default true) - This option will allow you to use a previously generated json category file. This will save load/cpu times. Use with caution.
-*/
     $.fn.filterbox = function(settings, file){
 
         var categories = categorize(itemize($(this)), true);
-        //console.log(categories);
-        
-        var download = "<a href='data:application/json;base64,"+btoa(JSON.stringify(categories))+"'>Your categories are ready to download.</a>";
+
         //Setting default values
         if(settings){
-            if(settings.export == undefined){
+            if(settings.export == undefined || file){
                 settings.export = false;
             }else {
                 $("body").html("<code>"+JSON.stringify(categories)+"</code>");
@@ -137,7 +127,6 @@ Settings:
             if(settings.customId == undefined){
                 settings.customId = false;
             }
-
         } else {
             var settings = {
                 display:true,
@@ -146,6 +135,20 @@ Settings:
             }
         }
 
+        if(file){
+            $.ajax({
+                url:file,
+                async:false,
+                dataType:"json",
+                success:function(data){
+                    categories = data;
+                },
+                error:function(data){
+                    console.error("Something went wrong. Heres the data:");
+                    console.error(data);
+                },
+            });
+        }
 
         if(settings.display)
             display(categories);
